@@ -1,0 +1,107 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rungal Çekiliş Sayfası</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1e1e2f;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            background: #2e2e4f;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #f832f8a5;
+        }
+        button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background: #ffcc00;
+            color: black;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #ffaa00;
+        }
+        .winner-animation {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 20px;
+            opacity: 1;
+            animation: blink 1s infinite alternate;
+        }
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>RUNGAL ÇEKİLİŞ'E HOŞGELDİNİZ!</h1>
+        <p>Kazananı belirlemek için butona basın!</p>
+        <button onclick="pickWinner()">Kazananı Seç</button>
+        <h2 id="winner" class="winner-animation"></h2>
+    </div>
+
+    <script>
+        let participants = ["132 Misafir", "Abdullah Çelik", "Ahmet Onur", "Ahmet Sedat Baydar", "Alicja Oleszkiewicz", "Ali Kurt", "Alper Altan", 
+        "Alperen Yıldırım", "Alper Pancaroğlu", "Anıl Üye", "Asli Mandiroglu", "Ayca Akad", "Ayhan Kayan", "Aykut Kayan", "Aysegul Bakkal", "Ayşegül Eygi", 
+        "Aytuğ Sayım", "Baran Örek", "Batuhan Özalhan", "Bensim Muzuri", "Berhan Şahin", "Berke Oran", "Berra Meşe", "Betül Çevik", "Beyda Usta", 
+        "Beyrek Baran Özçelik", "Bilal Dönmez", "BÜKE KOLDAN ERTÜRK", "Burcu Özge Ateş", "Büşra Furat", "Cagatay Sahin", "Cem", "Cemile Yılmaz", 
+        "Cenk Ordu", "Ceren Kuş Övet", "Çınla Dilman", "Davut Kılıçarslan", "Didem Vural", "Ece Ertopcu", "Ece Kusman", "Ecem Güneş", "Elif Pesen", 
+        "Elisa Kenar", "Emine Balcı", "Emine Yıldırım", "Emra Şahin", "Emre", "Emre Afacan", "Emre Korkmaz", "Engin Uslu", "Enver Üstün", "Erdi Kılıç", 
+        "Eren Makara", "Erkan Özkal", "Esra", "Esra Bostancı", "Esra Esener", "Faruk Atasal", "Fatih Ünal", "Fatma Dikmen", "Fatma Şafak", "Funda Kaya", 
+        "Furkan Şeref", "Gamze", "Gökberk Yiğitliler", "GOKHAN BAFRA", "Gül Ünlü Kılavuz", "Hakan Erol Yardım", "İbrahim Yardımcı", "İlker İsmail Yandı", 
+        "İlker Taşlıçukur", "İrem Civelek", "İrem Pusal", "Lara Büşra Çorapcı", "Lina Morkoç", "Lora Benbiçaço", "Mehmet Balcı", "Mehmet emin Karakuş", 
+        "Melda Tener", "Melike Erdemir", "Merve Aydoğan", "Merve Morkoç", "Mine", "Mirza", "Mirza Kızıltaş", "Murat İlhan", "Musa Yaşar", "MUSA YAŞAR", 
+        "MUSTAFA ALP USTA", "Mustafa Atağ", "Mustafa Terzioğlu", "NAZLI ZEYNEP GÜNEY", "nuray", "Nur Yiğit", "Ogeday Pakman", "Oğuz", "Onur Aybars Çakır", 
+        "Orçun Morkoç", "Öykü", "Özde Özaş", "Özge", "Perihan Atağ", "Ramazan kaçmaz", "Reem Ahu Demirci", "salih ipek", "Saye", "Seda Pilge", "Selin Aktitiz", 
+        "Serdar Çolak", "Sevgi İlter", "Sevil İlter", "Sevim bezen", "Şeyma Noyan", "Sezen Öktem", "Sibel Öztürk", "Sıla Coşkunoğlu", "Soner Sığırtmaç", 
+        "Şule Nurhak", "Taha Kılavuz", "Tayfun Toprak", "Tuba Can", "Ufuk Şahin", "Ulas Yildirim", "Umay Özmen", "Utku KOÇER", "Volkan Kahramam Çalışkan", 
+        "Yaren Oran", "Yasemin", "Yasemin Yaşar", "Yavuz", "Zeynep Buse Güllüel", "Zeynep Tuncer", "Kamil İnak"];
+
+        let usedNames = [];
+
+        function pickWinner() {
+            if (participants.length === 0) {
+                alert("Tüm katılımcılar seçildi!");
+                return;
+            }
+
+            let winnerIndex = Math.floor(Math.random() * participants.length);
+            let winner = participants.splice(winnerIndex, 1)[0];
+            usedNames.push(winner);
+
+            let winnerElement = document.getElementById("winner");
+            let shuffledNames = [...participants, winner];
+            let count = 0;
+
+            let interval = setInterval(() => {
+                if (count < shuffledNames.length) {
+                    winnerElement.innerText = "Kazanan: " + shuffledNames[count];
+                    count++;
+                } else {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        winnerElement.innerText = "Kazanan: " + winner;
+                    }, 500);
+                }
+            }, 100);
+        }
+    </script>
+</body>
+</html>
